@@ -45,21 +45,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'crispy_forms',
 ]
-
-SITE_ID = 1
-
-AUTH_USER_MODEL = 'users.User'
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-LOGIN_REDIRECT_URL = "/accounts/logout/"
-ACCOUNT_FORMS = {
-'signup': 'users.forms.CustomSignupForm',
-'login': 'users.forms.CustomLoginForm',
-}
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -148,3 +135,35 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+SITE_ID = 1
+
+AUTH_USER_MODEL = 'users.User'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = "/users/home"
+ACCOUNT_FORMS = {
+'signup': 'users.forms.CustomSignupForm',
+'login': 'users.forms.CustomLoginForm',
+}
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_EMAIL_REQUIRED = True  
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'   
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+
+ADMIN_APPROVAL_EMAIL = "superuser@yopmail.com"
+SITE_BASE_URL = "127.0.0.1:8000"
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'gits0618@gmail.com'
+EMAIL_HOST_PASSWORD = 'fuagcwpvvvaanrps'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
