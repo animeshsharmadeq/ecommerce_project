@@ -1,0 +1,36 @@
+{% extends "users/base.html" %}
+{% block content %}
+<style>
+    table {
+        text-align: center;
+    }
+</style>
+<html>
+<div class="d-flex justify-content-center">
+<table class="table table-striped table-hover" style="width:90%">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Shop Name</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for user in user_details %}
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.shopname}}</td>
+            <td>
+                <a href="/users/approval_requests/{{user.id}}" class="btn btn-dark">See Details</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="d-flex justify-content-center">
+</div>
+</html>
+{% endblock %}
