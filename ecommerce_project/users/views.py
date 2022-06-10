@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from allauth.account.utils import send_email_confirmation
 from .models import User
-from .utils import send_approval_email
+from .utils import is_admin, send_approval_email
 from .forms import ShopUserSignUpForm, UpdateUserDetails
 
 
@@ -68,7 +68,7 @@ def all_approval_requests(request):
 
     It is used to show all the approval requests by the admin.
     '''
-    if request.user.is_authenticated and request.user.is_staff:
+    if is_admin(request.user):
         user_details = User.objects.filter(is_active=False , rejection_reason = "").values()
         return render(request, "users/request_list.html", {"user_details": user_details})
     else:
@@ -80,7 +80,7 @@ def user_approval_requests(request, user_id):
 
     It is used to show the approval request of a particular user.
     '''
-    if request.user.is_authenticated and request.user.is_staff:
+    if is_admin(request.user):
         user_details = User.objects.get(id=user_id)
         return render(request, "users/request_details.html", {"user_details": user_details})
     else:
@@ -101,3 +101,11 @@ def admin_approval(request):
         user.is_active =False
     user.save()
     return redirect('/users/approval_requests')
+
+
+def shopusers(request):
+    if is_admin(request.user):
+        users_list = User.objects.filter(user_type="SHOPUSER", is_active = True).values()
+        return render(request, "users/shopusers.html", {"users_list": users_list})
+    else:
+        return HttpResponse("Unauthorised access", status=401)

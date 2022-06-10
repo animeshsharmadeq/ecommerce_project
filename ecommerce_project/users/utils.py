@@ -10,3 +10,7 @@ def send_approval_email(request, emailto, user):
     msg = "A new shop user has signed up. To approve the request please visit this" + \
         f"link, {SITE_BASE_URL}/users/approval_requests/{user.id}"
     send_mail("Approval Request", msg, request.POST["email"], [emailto])
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+    

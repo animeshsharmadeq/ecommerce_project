@@ -17,5 +17,6 @@ urlpatterns = [
          name='all_approval_requests'),
     path('approval_requests/<int:user_id>/',
          views.user_approval_requests, name='user_approval_requests'),
-    path('admin_approval', views.admin_approval, name='admin_approval')
+    path('admin_approval', views.admin_approval, name='admin_approval'),
+    path('shopusers', views.shopusers, name="shopusers"),
 ]
