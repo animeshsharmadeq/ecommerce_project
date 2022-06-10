@@ -84,6 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=254)
     user_type = models.CharField(max_length=8, choices=USER_TYPES)
     shopname = models.CharField(max_length=254, null=True)
+    rejection_reason = models.CharField(max_length=254, blank=True)
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'

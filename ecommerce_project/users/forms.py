@@ -58,8 +58,6 @@ class CustomSignupForm(SignupForm):
 
         It calls the save method of parent class and then inserts our user entered data.
         '''
-        print("CHECK THIS OUT")
-        print(request.get_full_path)
         user = super(CustomSignupForm, self).save(request)
         user.email = self.cleaned_data["email"]
         user.gender = self.cleaned_data["gender"]
@@ -67,6 +65,7 @@ class CustomSignupForm(SignupForm):
         user.date_of_birth = self.cleaned_data["date_of_birth"]
         user.name = self.cleaned_data["name"]
         user.user_type = "CUSTOMER"
+        user.rejection_reason = "APPROVED"
         user.save()
         return user
 

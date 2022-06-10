@@ -42,8 +42,31 @@
 <form method="post" action="{% url 'users:admin_approval' %}">
     {% csrf_token %}
     <input type="hidden" name="user_id" value="{{user_details.id}}"/>
+    <input type="hidden" name="rejection_reason" value="APPROVED"/>
     <button class="btn btn-success me-2" type="submit">Approve</button>
-    <button class="btn btn-danger me-2" type="submit">Reject</button>
+</form>
+<form method="post" action="{% url 'users:admin_approval' %}">
+    {% csrf_token %}
+    <input type="hidden" name="user_id" value="{{user_details.id}}"/>
+    <button class="btn btn-danger me-2" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Reject</button>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Reason for Rejection</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <textarea placeholder="Enter reason for rejection" class="form-control" id="exampleFormControlTextarea1" rows="3" name="rejection_reason" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
 </form>
 </div>
 </html>

@@ -69,7 +69,7 @@ def all_approval_requests(request):
     It is used to show all the approval requests by the admin.
     '''
     if request.user.is_authenticated and request.user.is_staff:
-        user_details = User.objects.filter(is_active=False).values()
+        user_details = User.objects.filter(is_active=False , rejection_reason = "").values()
         return render(request, "users/request_list.html", {"user_details": user_details})
     else:
         return HttpResponse("Unauthorised access", status=401)
@@ -93,6 +93,11 @@ def admin_approval(request):
     It is called when admin approves/rejects the request.
     '''
     user = User.objects.get(id=request.POST["user_id"])
-    user.is_active = True
+    rejection_reason = request.POST["rejection_reason"]
+    if rejection_reason == 'APPROVED':
+        user.is_active = True
+    else:
+        user.rejection_reason = rejection_reason
+        user.is_active =False
     user.save()
     return redirect('/users/approval_requests')
