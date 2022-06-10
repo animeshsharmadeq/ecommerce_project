@@ -39,9 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
     'users',
-    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -153,8 +151,8 @@ ACCOUNT_FORMS = {
 }
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/accounts/login/'
-ACCOUNT_EMAIL_REQUIRED = True  
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'   
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 
 ADMIN_APPROVAL_EMAIL = "superuser@yopmail.com"
