@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -92,3 +93,17 @@ class User(AbstractBaseUser, PermissionsMixin):
                        'gender', 'address', 'user_type']
 
     objects = UserManager()
+
+
+class Product(models.Model):
+    shop = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=254, null=True, blank=True)
+    product_image = models.ImageField(upload_to='images/', null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)
+    brand = models.CharField(max_length=254, null=True, blank=True)
+    material = models.CharField(max_length=254, null=True, blank=True)
+    category = models.CharField(max_length=254, null=True, blank=True)
+    is_published = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.shop.shopname

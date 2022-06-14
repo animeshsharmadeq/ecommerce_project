@@ -5,7 +5,7 @@ It manages how our django administrator functions and looks like
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import User
+from .models import User, Product
 
 
 class UserAdmin(BaseUserAdmin):
@@ -40,4 +40,12 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions',)
 
+class ProductAdmin(admin.ModelAdmin):
+    name = 'product_name'
+    price = 'price'
+    brand = 'brand'
+    category = 'category'
+    
+
+admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)

@@ -1,0 +1,23 @@
+{% extends "users/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<body>
+<div class="d-flex justify-content-center">
+  <h1>{% trans "Add Product" %}</h1>
+</div>
+<div class="h-100 d-flex justify-content-center">
+<form class="signup" class="form-control" id="signup_form" method="post" enctype="multipart/form-data" action="{% url 'users:addproduct' %}">
+  {% csrf_token %}
+  {{form.as_p}}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit" class="btn btn-success">{% trans "Add Product To Shop" %} &raquo;</button>
+</form>
+</div>
+</body>
+{% endblock %}

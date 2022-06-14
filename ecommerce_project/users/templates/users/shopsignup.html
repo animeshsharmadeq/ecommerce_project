@@ -2,10 +2,18 @@
 {% block content %}
 <body>
 <div class="d-flex justify-content-center">
+  {% if user.is_staff %}
+  <h1>Admin</h1>
+  {% else %}
   <h1>Sign Up</h1>
+  {% endif %}
 </div>
 <div class="d-flex justify-content-center">
+  {% if user.is_staff %}
+  <p>Create Shop User</p>
+  {% else %}
   <p>Already have an account? Then please <a href="{{ login_url }}">sign in</a></p>
+  {% endif %}
 </div>
 <div class="h-100 d-flex justify-content-center">
 <form class="signup" class="form-control" id="signup_form" method="post" action="{% url 'users:shopsignup' %}">

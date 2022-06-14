@@ -19,4 +19,10 @@ urlpatterns = [
          views.user_approval_requests, name='user_approval_requests'),
     path('admin_approval', views.admin_approval, name='admin_approval'),
     path('shopusers', views.shopusers, name="shopusers"),
+    path('deleteuser', views.deleteuser, name="deleteuser"),
+    path('adduser', views.adduser, name="adduser"),
+    path('updateuser', views.updateuser, name="updateuser"),
+    path('addproduct', views.addproduct, name="addproduct"),
+    path('updateproduct', views.updateproduct, name="updateproduct"),
+    path('deleteproduct', views.deleteproduct, name="deleteproduct"),
 ]

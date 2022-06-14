@@ -2,12 +2,17 @@
 
 It contains the different views that are linked with particular urls.
 '''
+import email
+from enum import Flag
+from math import prod
+from urllib import response
+from wsgiref.util import request_uri
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from allauth.account.utils import send_email_confirmation
-from .models import User
+from .models import Product, User
 from .utils import is_admin, send_approval_email
-from .forms import ShopUserSignUpForm, UpdateUserDetails
+from .forms import ShopUserSignUpForm, UpdateUserDetails, ProductForm
 
 
 def index(request):
@@ -18,8 +23,16 @@ def index(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
             return redirect('/admin/')
+        elif request.user.user_type == "SHOPUSER":
+            products = Product.objects.filter(shop=User.objects.get(id=request.user.id))
+            print("VCHJE")
+            print(products)
+            return render(request, 'users/home.html', {"products": products})
         else:
-            return render(request, 'users/home.html', {})
+            products = Product.objects.all()
+            print("USER")
+            print(products)
+            return render(request, 'users/home.html', {"products": products})
     else:
         return redirect('/accounts/login/')
 
@@ -30,6 +43,7 @@ def updateprofile(request):
     It is used while updating the user profile at users/updateprofile url.
     '''
     if request.method == 'POST':
+
         form = UpdateUserDetails(request.POST, instance=request.user)
         if form.is_valid():
             profile = User.objects.get(email=request.user.email)
@@ -53,7 +67,7 @@ def shopsignup(request):
         profile = User.objects.create_user(request.POST["email"], request.POST["password1"],
                                            request.POST["date_of_birth"], request.POST["gender"],
                                            request.POST["address"], "SHOPUSER",
-                                           request.POST["name"], False, request.POST["shopname"])
+                                           request.POST["name"], request.user.is_staff, request.POST["shopname"])
         send_email_confirmation(
             request, profile, signup=True, email=request.POST["email"])
         send_approval_email(request, "superuser@yopmail.com", profile)
@@ -109,3 +123,71 @@ def shopusers(request):
         return render(request, "users/shopusers.html", {"users_list": users_list})
     else:
         return HttpResponse("Unauthorised access", status=401)
+
+def updateuser(request):
+    if is_admin(request.user):
+        profile = User.objects.get(email=request.POST["email"])
+        profile.name = request.POST["name"]
+        profile.address = request.POST["address"]
+        profile.shopname = request.POST["shopname"]
+        profile.save()
+        return JsonResponse({"status" : 200})
+    else:
+        return HttpResponse("Unauthorised access", status=401)   
+
+def deleteuser(request):
+    if is_admin(request.user):
+        User.objects.get(id=request.POST["user_id"]).delete()
+        return redirect('/users/shopusers')
+    else:
+        return HttpResponse("Unauthorised access", status=401)
+
+def adduser(request):
+    if is_admin(request.user):
+        form = ShopUserSignUpForm()
+        return render(request, "users/shopsignup.html", {"form": form})
+    else:
+        return HttpResponse("Unauthorised access", status=401)
+
+def addproduct(request):
+    if request.method == 'GET':
+        if request.user.user_type == "SHOPUSER":
+            form = ProductForm()
+            return render(request, "users/addproduct.html", {"form": form})
+    else:
+        product = Product()
+        product.shop = User.objects.get(id=request.user.id)
+        product.product_name = request.POST["product_name"]
+        product.product_image = request.FILES["product_image"]
+        product.price = request.POST["price"]
+        product.brand = request.POST["brand"]
+        product.material = request.POST["material"]
+        product.category = request.POST["category"]
+        if request.POST["is_published"] == 'on':
+            product.is_published = True
+        else:
+            product.is_published = False
+        product.save()
+        return redirect('/users/addproduct')
+    return HttpResponse("Unauthorised access", status=401)
+
+def updateproduct(request):
+    if request.method == "POST":
+        if request.user.user_type == "SHOPUSER":
+            product = Product.objects.get(id=request.POST["product_id"])
+            product.product_name = request.POST["product_name"]
+            product.price = request.POST["price"]
+            product.brand = request.POST["brand"]
+            product.material = request.POST["material"]
+            product.category = request.POST["category"]
+            product.product_image = request.FILES["product_image"]
+            product.save()
+            return redirect('/users/updateproduct')
+    else:
+        form=ProductForm(instance=Product.objects.get(id=request.GET["product_id"]))
+        return render(request, "users/addproduct.html", {"form": form})
+
+def deleteproduct(request):
+    print("HERE")
+    Product.objects.get(id=request.GET["product_id"]).delete()
+    return redirect('/users/home')

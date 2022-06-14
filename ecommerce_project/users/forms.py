@@ -1,6 +1,8 @@
+import email
+from email.policy import default
 from django import forms
 from allauth.account.forms import SignupForm, LoginForm
-from .models import User
+from .models import Product, User
 
 
 GENDER_CHOICES = (
@@ -109,7 +111,12 @@ class UpdateUserDetails(forms.ModelForm):
         It contains model details and fields of this form.
         '''
         model = User
-        fields = ['gender', 'address', 'date_of_birth', 'name']
+        fields = ['email', 'gender', 'address', 'date_of_birth', 'name']
+    
+    email = forms.EmailField(disabled=True, widget=forms.EmailInput(
+        attrs={
+            'class': 'form-control'
+        }))    
 
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.Select(
         attrs={
@@ -131,7 +138,6 @@ class UpdateUserDetails(forms.ModelForm):
             'class': 'form-control'
         }))
 
-
 class ShopUserSignUpForm(CustomSignupForm):
     '''This is the ShopUserSignUpForm.
 
@@ -142,3 +148,37 @@ class ShopUserSignUpForm(CustomSignupForm):
             'placeholder': 'Enter fullname',
             'class': 'form-control'
         }))
+
+class ProductForm(forms.ModelForm):
+    product_name = forms.CharField(max_length=254, widget=forms.TextInput(
+        attrs={
+            'placeholder': 'Enter Product Name',
+            'class': 'form-control'
+        }))
+    product_image = forms.ImageField(required=False)
+    price = forms.IntegerField(widget=forms.TextInput(
+        attrs={
+            'type':'number',
+            'placeholder': 'Enter Price',
+            'class': 'form-control'
+        }))
+    brand = forms.CharField(max_length=254, widget=forms.TextInput(
+        attrs={
+            'placeholder': 'Enter Brand Name',
+            'class': 'form-control'
+        }))
+    material = forms.CharField(max_length=254, widget=forms.TextInput(
+        attrs={
+            'placeholder': 'Enter Material',
+            'class': 'form-control'
+        }))
+    category = forms.CharField(max_length=254, widget=forms.TextInput(
+        attrs={
+            'placeholder': 'Enter Category',
+            'class': 'form-control'
+        }))
+    is_published = forms.BooleanField(label="Do you want to publish the product to all users?", required=False, initial=True)
+
+    class Meta:
+        model =Product
+        fields=['product_name', 'price', 'brand', 'material', 'category', 'is_published']

@@ -3,13 +3,13 @@
 <html>
     <body>
     <div class="d-flex justify-content-center">
-        <h1>Update Profile</h1>
+        <h1>Profile</h1>
     </div>
     <div class="d-flex justify-content-center">
     <form method="POST" action="{% url 'users:updateprofile' %}">
         {% csrf_token %}
         {{form.as_p}}
-        <button type="submit">
+        <button class="btn btn-success" type="submit">
             Update Profile
         </button>
     </form>
