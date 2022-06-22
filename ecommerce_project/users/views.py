@@ -2,14 +2,11 @@
 
 It contains the different views that are linked with particular urls.
 '''
-import email
-from enum import Flag
-from math import prod
-from urllib import response
-from wsgiref.util import request_uri
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from allauth.account.utils import send_email_confirmation
+
+from .filters import ProductFilter
 from .models import Product, User
 from .utils import is_admin, send_approval_email
 from .forms import ShopUserSignUpForm, UpdateUserDetails, ProductForm
@@ -25,14 +22,12 @@ def index(request):
             return redirect('/admin/')
         elif request.user.user_type == "SHOPUSER":
             products = Product.objects.filter(shop=User.objects.get(id=request.user.id))
-            print("VCHJE")
-            print(products)
             return render(request, 'users/home.html', {"products": products})
         else:
             products = Product.objects.all()
-            print("USER")
-            print(products)
-            return render(request, 'users/home.html', {"products": products})
+            product_list = Product.objects.all()
+            product_filter = ProductFilter(request.GET, queryset=product_list)
+            return render(request, 'users/home.html', {'filter': product_filter, "products": products})
     else:
         return redirect('/accounts/login/')
 

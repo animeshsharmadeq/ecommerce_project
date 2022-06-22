@@ -1,7 +1,17 @@
 {% extends "users/base.html" %}
+{% load static %}
 {% block content %}
+<div class="d-flex justify-content-around">
+    <div>
+        <form method="get">
+            {{ filter.form }}
+            <button class="btn btn-outline-dark" type="submit">Search</button>
+          </form>
+    </div>
+</div>
 <div class="row" style="margin: 1%;">
-    {% for p in products %}
+    {% if filter.qs %}
+    {% for p in filter.qs %}
         <div class="col-md-3">
             <div class="card mb-4 shadow-sm">
                 <img class="card-img-top" src="{{p.product_image.url}}" alt="Card image cap">
@@ -43,5 +53,10 @@
         </div>
        {% if forloop.counter|divisibleby:4 %}</div><div class="row" style="margin: 1%;">{% endif %}  {# HERE #}
     {% endfor %}
+    {% else %}
+    <div>
+        <img src="{% static 'users/no_data.webp' %}" class="img-fluid">
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
